@@ -1,0 +1,20 @@
+package com.medicalstoreapp.user.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.culturofest.user.entity.Role;
+import com.culturofest.user.repository.IRoleRepository;
+
+@Service("roleService")
+public class RoleServiceImpl implements IRoleService{
+
+	@Autowired
+	private IRoleRepository roleRepository;
+
+	@Override
+	public Role createRole(Role role) {
+		
+		return roleRepository.save(role);
+	}
+}

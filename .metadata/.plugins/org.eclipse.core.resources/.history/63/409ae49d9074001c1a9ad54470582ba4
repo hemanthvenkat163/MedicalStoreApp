@@ -1,0 +1,8 @@
+server.port =9087
+server.error.whitelabel.enabled= False
+spring.datasource.url = jdbc:postgresql://localhost:5432/LoginDB
+spring.datasource.username = postgres
+spring.datasource.password =Sandhya@123
+spring.jpa.show-sql = true 
+spring.jpa.hibernate.ddl-auto = update
+

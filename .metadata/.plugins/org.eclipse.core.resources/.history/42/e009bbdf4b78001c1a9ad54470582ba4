@@ -1,0 +1,15 @@
+package com.medicalstoreapp.exception;
+
+public class SuppliedStockNotFoundException extends RuntimeException 
+{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public SuppliedStockNotFoundException(String msg)
+	{
+		super(msg);
+	}
+
+}

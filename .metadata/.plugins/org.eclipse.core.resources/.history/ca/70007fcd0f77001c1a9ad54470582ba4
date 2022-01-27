@@ -1,0 +1,59 @@
+package com.medicalstoreapp.user.service;
+
+import java.util.List;
+
+import com.medicalstoreapp.user.entity.User;
+import com.medicalstoreapp.user.request.AddOrderRequest;
+import com.medicalstoreapp.user.request.AddSupplyStockRequest;
+import com.medicalstoreapp.user.request.CreateReportRequest;
+import com.medicalstoreapp.user.request.CreateStockRequest;
+import com.medicalstoreapp.user.request.UpdateQuantity;
+import com.medicalstoreapp.user.vo.OrderDetails;
+import com.medicalstoreapp.user.vo.ReportDetails;
+import com.medicalstoreapp.user.vo.Stock;
+import com.medicalstoreapp.user.vo.SuppliedEntity;
+
+public interface IUserService {
+
+	String registerUser(User user);
+
+	void initRoleAndUser();
+
+	String getEncodedPassword(String password);
+
+	User getUser(String userName);
+
+	String addStock(CreateStockRequest request);
+
+	String increaseQuantity(UpdateQuantity quantity);
+
+	Stock findByStockId(Long stockId);
+
+	String deleteByStockId(Long stockId);
+
+	List<Stock> getAllStock();
+
+	String addSuppliedStock(AddSupplyStockRequest requestData);
+
+	SuppliedEntity findSuppliedStockDetailsById(Long suppliedStockId);
+
+	String deleteById(Long suppliedStockId);
+
+	List<SuppliedEntity> fetchAllSuppliedStock();
+
+	String addOrder(AddOrderRequest request);
+
+	OrderDetails findOrderDetailsByOrderId(Long id);
+
+	String deleteOrderById(Long orderId);
+
+	List<OrderDetails> fetchAllOrders();
+
+	List<OrderDetails> findAllOrders(String startDate, String endDate);
+
+	String generateReportInPeriod(CreateReportRequest requestData);
+
+	ReportDetails findReportDetailsById(Long reportId);
+
+	String deleteReportById(Long reportId);
+}

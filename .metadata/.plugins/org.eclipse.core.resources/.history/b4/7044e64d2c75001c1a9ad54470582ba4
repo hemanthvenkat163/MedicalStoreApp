@@ -1,0 +1,41 @@
+
+server.port=8483
+
+#microservice configuration
+#name which service will be registered
+spring.application.name=orderms
+
+#Discovery server access
+#eureka.client.serviceUrl.defaultZone=http://localhost:8480/eureka
+
+#stock.baseurl=http://stockms
+
+#logging configuration
+logging.file.name=app.log
+logging.level.com.medicalstoreapp.orderms=info
+
+#actuator configuration
+management.endpoints.web.exposure.include=*
+#management.server.port=4449
+management.endpoint.health.show-details=ALWAYS
+management.endpoint.beans.enable=d=true
+
+
+# ==============================
+# = DATA SOURCE
+# ===============================
+spring.datasource.driver-class-name=org.postgresql.Driver
+spring.datasource.url =jdbc:postgresql://localhost:5432/medicalstoreapp
+spring.datasource.username =postgres
+spring.datasource.password=root
+
+
+
+# ===============================
+# JPA / HIBERNATE / with psql
+# ===============================
+spring.jpa.show-sql = false
+spring.jpa.hibernate.ddl-auto = create
+spring.jpa.properties.hibernate.dialect = org.hibernate.dialect.PostgreSQL95Dialect
+hibernate.format_sql=true;
+# ===============================

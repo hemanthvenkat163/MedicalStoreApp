@@ -1,0 +1,23 @@
+server.port=8080
+
+logging.level.com.medicalstoreapp.reportms=info
+
+
+# ===============================
+# = DATA SOURCE
+# ===============================
+spring.datasource.driver-class-name=org.postgresql.Driver
+spring.datasource.url =jdbc:postgresql://localhost:5432/medicalstoreapp
+spring.datasource.username =postgres
+spring.datasource.password=postgresql
+
+
+
+# ===============================
+# JPA / HIBERNATE / with psql
+# ===============================
+spring.jpa.show-sql = false
+spring.jpa.hibernate.ddl-auto = create
+spring.jpa.properties.hibernate.dialect = org.hibernate.dialect.PostgreSQL95Dialect
+hibernate.format_sql=true;
+# ===============================

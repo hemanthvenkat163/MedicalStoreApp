@@ -1,0 +1,31 @@
+server.port=8484
+
+spring.application.name=reportms
+
+logging.level.com.medicalstoreapp.reportms=info
+
+#Discovery server access
+eureka.client.serviceUrl.defaultZone=http://localhost:8480/eureka
+
+
+order.baseurl=http://orderms
+
+
+# ===============================
+# = DATA SOURCE
+# ===============================
+spring.datasource.driver-class-name=org.postgresql.Driver
+spring.datasource.url =jdbc:postgresql://localhost:5432/medicalstoreapp
+spring.datasource.username =postgres
+spring.datasource.password=root
+
+
+
+# ===============================
+# JPA / HIBERNATE / with psql
+# ===============================
+spring.jpa.show-sql = false
+spring.jpa.hibernate.ddl-auto = update
+spring.jpa.properties.hibernate.dialect = org.hibernate.dialect.PostgreSQL95Dialect
+hibernate.format_sql=true;
+# ===============================

@@ -1,0 +1,91 @@
+package com.medicalstoreapp.user.controller;
+
+import java.util.List;
+
+import javax.annotation.PostConstruct;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.medicalstoreapp.user.entity.User;
+import com.medicalstoreapp.user.request.CreateStockRequest;
+import com.medicalstoreapp.user.request.UpdateQuantity;
+import com.medicalstoreapp.user.service.UserServiceImpl;
+import com.medicalstoreapp.user.vo.Stock;
+
+
+@RestController
+@CrossOrigin
+public class UserController {
+
+	@Autowired
+	private UserServiceImpl userService;
+
+	@PostConstruct
+	public void initRoleAndUser() {
+		userService.initRoleAndUser();
+	}
+
+	@PostMapping(value = "/registerUser", produces = "application/json")
+	public String registerUser(@RequestBody User user) {
+		return userService.registerUser(user);
+	}
+
+	@GetMapping(value = "/forAdmin")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	public String forAdmin() {
+		return "This URL is only accessible to the admin";
+	}
+
+	@GetMapping(value = "/forUser")
+	@PreAuthorize("hasRole('ROLE_PARTICIPANT')")
+	public String forUser() {
+		return "This URL is only accessible to the user";
+	}
+
+	@GetMapping(value = "/admin/{userName}")
+	public User getUser(@PathVariable String userName) {
+		return userService.getUser(userName);
+	}
+	
+	@PostMapping("/stocks/add")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	public String addStock(@RequestBody CreateStockRequest request) {
+		return userService.addStock(request);
+	}
+	
+	@PutMapping("stocks/increaseQuantity")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	public String increaseQuantity(@RequestBody UpdateQuantity quantity) {
+		return userService.increaseQuantity(quantity);
+	}
+	
+	@GetMapping("stocks/bystockid/{id}")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	public Stock findByStockId(@PathVariable("id") Long stockId) {
+		return userService.findByStockId(stockId);
+	}
+	
+	@DeleteMapping("stocks/delete/bystockid/{id}")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	public String deleteStockById(@PathVariable("id") Long stockId) {
+		return  userService.deleteByStockId(stockId);
+		
+	}
+	
+	@GetMapping("stocks/all")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	public List<Stock> fetchAll() {
+		return userService.getAllStock();
+	}
+	
+	
+}

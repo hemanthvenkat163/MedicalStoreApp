@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?><testrun name="StockmsApplicationTests" project="stockms" tests="3" started="3" failures="0" errors="0" ignored="0">
+  <testsuite name="com.medicalstoreapp.stockms.service.StockmsApplicationTests" time="1.591" displayname="StockmsApplicationTests" uniqueid="[engine:junit-jupiter]/[class:com.medicalstoreapp.stockms.service.StockmsApplicationTests]">
+    <testcase name="decreaseQuantity" classname="com.medicalstoreapp.stockms.service.StockmsApplicationTests" time="1.59" displayname="decreaseQuantity()" uniqueid="[engine:junit-jupiter]/[class:com.medicalstoreapp.stockms.service.StockmsApplicationTests]/[method:decreaseQuantity()]"/>
+    <testcase name="addTest" classname="com.medicalstoreapp.stockms.service.StockmsApplicationTests" time="0.0" displayname="addTest()" uniqueid="[engine:junit-jupiter]/[class:com.medicalstoreapp.stockms.service.StockmsApplicationTests]/[method:addTest()]"/>
+    <testcase name="increaseQuantity" classname="com.medicalstoreapp.stockms.service.StockmsApplicationTests" time="0.0" displayname="increaseQuantity()" uniqueid="[engine:junit-jupiter]/[class:com.medicalstoreapp.stockms.service.StockmsApplicationTests]/[method:increaseQuantity()]"/>
+  </testsuite>
+</testrun>

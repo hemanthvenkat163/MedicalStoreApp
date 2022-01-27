@@ -1,0 +1,44 @@
+package com.medicalstoreapp.ordermodule.dto;
+
+public class StockDetails {
+
+	private long stockId;
+	private String stockName;
+	private long units;
+	private double stockPrice;
+	
+	public StockDetails(long stockId, String stockName, long units, double stockPrice) {
+		super();
+		this.stockId = stockId;
+		this.stockName = stockName;
+		this.units = units;
+		this.stockPrice = stockPrice;
+	}
+	public long getStockId() {
+		return stockId;
+	}
+	public void setStockId(long stockId) {
+		this.stockId = stockId;
+	}
+	public String getStockName() {
+		return stockName;
+	}
+	public void setStockName(String stockName) {
+		this.stockName = stockName;
+	}
+	public long getUnits() {
+		return units;
+	}
+	public void setUnits(long units) {
+		this.units = units;
+	}
+	public double getStockPrice() {
+		return stockPrice;
+	}
+	public void setStockPrice(double stockPrice) {
+		this.stockPrice = stockPrice;
+	}
+	
+	
+	
+}

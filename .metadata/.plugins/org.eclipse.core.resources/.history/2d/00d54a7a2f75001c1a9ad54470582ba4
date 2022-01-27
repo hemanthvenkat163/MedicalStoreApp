@@ -1,0 +1,28 @@
+package com.medicalstoreapp.stockms.manualtesting;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import com.medicalstoreapp.stockms.dto.CreateStockRequest;
+import com.medicalstoreapp.stockms.service.StockServiceImpl;
+
+@Component
+public class ManualTesting {
+	private static final Logger Log = LoggerFactory.getLogger(ManualTesting.class);
+	@Autowired
+	private StockServiceImpl service;
+
+	public void addtest() {
+		Log.info("add method testing started...");
+		CreateStockRequest stockRequest = new CreateStockRequest();
+		stockRequest.setStockName("Dell");
+		stockRequest.setUnits(10);
+		stockRequest.setPrice(10000);
+		Log.info("New Stock Request created...");
+		Log.info(service.add(stockRequest).toString());
+		Log.info("add method testing ended...");
+
+	}
+
+}

@@ -1,0 +1,25 @@
+package com.medicalstoreapp.stockms;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.web.bind.annotation.CrossOrigin;
+
+import com.medicalstoreapp.stockms.manualtesting.ManualTesting;
+
+@EnableEurekaClient
+@SpringBootApplication
+public class StockmsApplication {
+
+	public static void main(String[] args) {
+		//final Logger log = LoggerFactory.getLogger(StockmsApplication.class);
+		SpringApplication.run(StockmsApplication.class, args);
+		//log.info("Application Started");
+		
+		
+	}
+
+}

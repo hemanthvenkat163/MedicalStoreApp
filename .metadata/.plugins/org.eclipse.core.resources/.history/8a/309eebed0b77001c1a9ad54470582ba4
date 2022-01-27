@@ -1,0 +1,231 @@
+package com.medicalstoreapp.user.controller;
+
+import java.util.List;
+
+import javax.annotation.PostConstruct;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.medicalstoreapp.user.entity.User;
+import com.medicalstoreapp.user.request.AddOrderRequest;
+import com.medicalstoreapp.user.request.AddSupplyStockRequest;
+import com.medicalstoreapp.user.request.CreateStockRequest;
+import com.medicalstoreapp.user.request.UpdateQuantity;
+import com.medicalstoreapp.user.service.UserServiceImpl;
+import com.medicalstoreapp.user.vo.OrderDetails;
+import com.medicalstoreapp.user.vo.Stock;
+import com.medicalstoreapp.user.vo.SuppliedEntity;
+
+@RestController
+@CrossOrigin
+public class UserController {
+
+	@Autowired
+	private UserServiceImpl userService;
+
+	@PostConstruct
+	public void initRoleAndUser() {
+		userService.initRoleAndUser();
+	}
+
+	@PostMapping(value = "/registerUser", produces = "application/json")
+	public String registerUser(@RequestBody User user) {
+		return userService.registerUser(user);
+	}
+
+	@GetMapping(value = "/forAdmin")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	public String forAdmin() {
+		return "This URL is only accessible to the admin";
+	}
+
+	@GetMapping(value = "/forUser")
+	@PreAuthorize("hasRole('ROLE_PARTICIPANT')")
+	public String forUser() {
+		return "This URL is only accessible to the user";
+	}
+
+	@GetMapping(value = "/admin/{userName}")
+	public User getUser(@PathVariable String userName) {
+		return userService.getUser(userName);
+	}
+
+	/**
+	 * Adding stock from user module
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@PostMapping("/stocks/add")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	public String addStock(@RequestBody CreateStockRequest request) {
+		return userService.addStock(request);
+	}
+
+	/**
+	 * Updating Stock from usermodule
+	 * 
+	 * @param quantity
+	 * @return
+	 */
+	@PutMapping("/stocks/increaseQuantity")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	public String increaseQuantity(@RequestBody UpdateQuantity quantity) {
+		return userService.increaseQuantity(quantity);
+	}
+
+	/**
+	 * Getting the stock details by id from user module
+	 * 
+	 * @param stockId
+	 * @return
+	 */
+	@GetMapping("/stocks/bystockid/{id}")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	public Stock findByStockId(@PathVariable("id") Long stockId) {
+		return userService.findByStockId(stockId);
+	}
+
+	/**
+	 * Deleting the stock by id from user module
+	 * 
+	 * @param stockId
+	 * @return
+	 */
+	@DeleteMapping("/stocks/delete/bystockid/{id}")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	public String deleteStockById(@PathVariable("id") Long stockId) {
+		return userService.deleteByStockId(stockId);
+
+	}
+
+	/**
+	 * Getting all the stock details from user module
+	 * 
+	 * @return
+	 */
+	@GetMapping("/stocks/all")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	public List<Stock> fetchAll() {
+		return userService.getAllStock();
+	}
+
+	/**
+	 * Adding SuppliedStock Details from user module
+	 * 
+	 * @param requestData
+	 * @return
+	 */
+	@PostMapping("/suppliedstockms/AddSupplyStockRequest")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	public String addSuppliedStock(@RequestBody AddSupplyStockRequest requestData) {
+		return userService.addSuppliedStock(requestData);
+
+	}
+
+	/**
+	 * Getting suppliedStock details by Id
+	 * 
+	 * @param suppliedStockId
+	 * @return
+	 */
+	@GetMapping("/suppliedstockms/findById/{id}")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	public SuppliedEntity fetchSuppliedStockDetailsById(@PathVariable("id") Long suppliedStockId) {
+		return userService.findSuppliedStockDetailsById(suppliedStockId);
+
+	}
+
+	/**
+	 * Deleting suppliedStock details by its ID
+	 * 
+	 * @param suppliedStockId
+	 * @return
+	 */
+	@DeleteMapping("/suppliedstockms/ById/{Id}")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	public String deleteById(@PathVariable("Id") Long suppliedStockId) {
+		return userService.deleteById(suppliedStockId);
+	}
+
+	/**
+	 * Getting all the suppliedStock details from usermodule
+	 * 
+	 * @return
+	 */
+	@GetMapping("/suppliedstockms/findAllSuppliedStock")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	public List<SuppliedEntity> fetchAllSuppliedStock() {
+		return userService.fetchAllSuppliedStock();
+
+	}
+
+	/**
+	 * Creating Order from user module
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@PostMapping("/orders/add")
+	@PreAuthorize("hasRole('ROLE_PARTICIPANT')")
+	public String addOrder(@RequestBody AddOrderRequest request) {
+		return userService.addOrder(request);
+
+	}
+	
+	/**
+	 * Getting order details By OrderId
+	 * @param id
+	 * @return
+	 */
+	@GetMapping("/orders/byid/{orderId}")
+	@PreAuthorize("hasRole('ROLE_PARTICIPANT')")
+	public OrderDetails fetchOrderDetailsById(@PathVariable("orderId") Long id) {
+		OrderDetails response = userService.findOrderDetailsByOrderId(id);
+		return response;
+	}
+
+	/**
+	 * Deleting order by its id
+	 * @param id
+	 * @return
+	 */
+	@DeleteMapping("/orders/deletebyid/{orderId}")
+	@PreAuthorize("hasRole('ROLE_PARTICIPANT')")
+	public String deleteOrderById(@PathVariable("orderId") Long id) {
+		return userService.deleteOrderById(id);
+	}
+	
+	/**
+	 * Getting all the orders
+	 * @return
+	 */
+	@GetMapping("/orders/all")	
+	@PreAuthorize("hasRole('ROLE_PARTICIPANT')")
+	public List<OrderDetails> fetchAllOrders(){
+		List<OrderDetails> response = userService.fetchAllOrders();
+		return response;
+	}
+	
+	/**Getting all the orderDetails in a certain period
+	 *
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
+	@GetMapping("/all/{startDate}/{endDate}")
+	@PreAuthorize("hasRole('ROLE_PARTICIPANT')")
+    public List<OrderDetails> fetchAll(@PathVariable String startDate,@PathVariable String endDate) {
+        List<OrderDetails> response = userService.findAllOrders(startDate, endDate);
+        return response;
+    }
+}

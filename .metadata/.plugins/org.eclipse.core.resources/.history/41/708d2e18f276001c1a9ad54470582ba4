@@ -1,0 +1,17 @@
+package com.medicalstoreapp.user.service;
+
+import com.medicalstoreapp.user.entity.User;
+import com.medicalstoreapp.user.request.CreateStockRequest;
+
+public interface IUserService {
+
+	public String registerUser(User user);
+
+	public void initRoleAndUser();
+
+	public String getEncodedPassword(String password);
+
+	public User getUser(String userName);
+
+	String add(CreateStockRequest request);
+}

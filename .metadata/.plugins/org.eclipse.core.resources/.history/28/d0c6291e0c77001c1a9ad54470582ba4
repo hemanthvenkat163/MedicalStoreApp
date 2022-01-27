@@ -1,0 +1,25 @@
+server.port =9087
+
+#microservice configuration
+#name which service will be registered
+spring.application.name=loginms
+
+
+stock.baseurl=http://stockms
+
+suppliedstock.baseurl=http://suppliedstockms
+
+order.baseurl=http://orderms
+
+#Discovery server access
+eureka.client.serviceUrl.defaultZone=http://localhost:8480/eureka
+
+spring.main.allow-circular-references=true
+
+server.error.whitelabel.enabled= False
+spring.datasource.url = jdbc:postgresql://localhost:5432/medicalstoreapp
+spring.datasource.username = postgres
+spring.datasource.password =root
+spring.jpa.show-sql = true 
+spring.jpa.hibernate.ddl-auto = update
+

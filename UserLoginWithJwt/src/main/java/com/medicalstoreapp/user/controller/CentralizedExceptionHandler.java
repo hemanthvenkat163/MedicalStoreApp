@@ -1,0 +1,42 @@
+package com.medicalstoreapp.user.controller;
+
+import java.util.NoSuchElementException;
+
+import org.springframework.dao.InvalidDataAccessApiUsageException;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.client.HttpClientErrorException;
+
+import com.medicalstoreapp.user.exception.InvalidCredentailsException;
+
+
+
+@RestControllerAdvice
+public class CentralizedExceptionHandler {
+	
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(HttpClientErrorException.class)
+    public String handleHttpClientErrorException(HttpClientErrorException e){
+        return e.getMessage();
+    }
+	
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(InvalidCredentailsException.class)
+    public String handleInvalidCredentailsException(InvalidCredentailsException e){
+        return e.getMessage();
+    }
+	
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(NoSuchElementException.class)
+    public String handleNoSuchElementException(NoSuchElementException e){
+        return "Username not found";
+    }
+	
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(InvalidDataAccessApiUsageException.class)
+    public String handleInvalidDataAccessApiUsageException(InvalidDataAccessApiUsageException e){
+        return e.getMessage();
+    }
+}

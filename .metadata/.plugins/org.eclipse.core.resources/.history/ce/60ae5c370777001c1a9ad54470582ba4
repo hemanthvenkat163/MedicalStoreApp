@@ -1,0 +1,185 @@
+package com.medicalstoreapp.user.service;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import com.medicalstoreapp.user.entity.Role;
+import com.medicalstoreapp.user.entity.User;
+import com.medicalstoreapp.user.repository.IRoleRepository;
+import com.medicalstoreapp.user.repository.IUserRepository;
+import com.medicalstoreapp.user.request.AddOrderRequest;
+import com.medicalstoreapp.user.request.AddSupplyStockRequest;
+import com.medicalstoreapp.user.request.CreateStockRequest;
+import com.medicalstoreapp.user.request.UpdateQuantity;
+import com.medicalstoreapp.user.vo.Stock;
+import com.medicalstoreapp.user.vo.SuppliedEntity;
+
+@Service("userService")
+public class UserServiceImpl implements IUserService {
+
+	@Autowired
+	private IUserRepository userRepository;
+
+	@Autowired
+	private IRoleRepository roleRepository;
+
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+
+	@Autowired
+	private RestTemplate restTemplate;
+
+	@Value("${stock.baseurl}")
+	private String stockBaseUrl;
+
+	@Value("${suppliedstock.baseurl}")
+	private String suppliedStockBaseUrl;
+
+	@Value("${order.baseurl}")
+	private String orderBaseUrl;
+	
+	@Override
+	public String registerUser(User user) {
+		String role = "ROLE_PARTICIPANT";
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		user.setRole(role);
+		userRepository.save(user);
+		return "User successfully registered with the role = " + user.getRole();
+	}
+
+	public void initRoleAndUser() {
+
+		Role adminRole = new Role();
+		adminRole.setRoleName("Admin");
+		adminRole.setRoleDescription("Admin role");
+		roleRepository.save(adminRole);
+
+		Role userRole = new Role();
+		userRole.setRoleName("User");
+		userRole.setRoleDescription("Default role for newly created record");
+		roleRepository.save(userRole);
+
+		User adminUser = new User();
+
+		adminUser.setUserName("admin123");
+		adminUser.setPassword(getEncodedPassword("admin@pass"));
+		adminUser.setFirstName("admin");
+		adminUser.setLastName("admin");
+		adminUser.setAge(22);
+		adminUser.setEmail("admin@gmail.com");
+
+		Set<Role> adminRoles = new HashSet<>();
+		adminRoles.add(adminRole);
+		adminUser.setRole("ROLE_ADMIN");
+		userRepository.save(adminUser);
+	}
+
+	@Override
+	public String getEncodedPassword(String password) {
+		return passwordEncoder.encode(password);
+	}
+
+	public User getUser(String userName) {
+
+		return userRepository.findByUserName(userName);
+	}
+
+	/**
+	 * adding stock by resttemplate from login module
+	 */
+	@Override
+	public String addStock(CreateStockRequest request) {
+		restTemplate.postForObject(stockBaseUrl + "/stocks/add", request, Stock.class);
+		return "Stock Created Successfully";
+	}
+
+	/**
+	 * updating the stock details
+	 */
+	@Override
+	public String increaseQuantity(UpdateQuantity quantity) {
+		restTemplate.put(stockBaseUrl + "/stocks/increaseQuantity", quantity, Stock.class);
+		return "Quantity Increased Successfully";
+	}
+
+	/**
+	 * getting the stock details by stockId
+	 */
+	@Override
+	public Stock findByStockId(Long stockId) {
+
+		return restTemplate.getForObject(stockBaseUrl + "/stocks/bystockid/" + stockId, Stock.class);
+	}
+
+	/**
+	 * Delete the stock by its Id
+	 */
+	@Override
+	public String deleteByStockId(Long stockId) {
+		restTemplate.delete(stockBaseUrl + "/stocks/delete/bystockid/" + stockId);
+		return "Stock deleted for id" + stockId;
+	}
+
+	/**
+	 * Getting all the stocks
+	 */
+	@Override
+	public List<Stock> getAllStock() {
+
+		return Arrays.asList(restTemplate.getForObject(stockBaseUrl + "/stocks/all", Stock[].class));
+	}
+	
+	/**
+	 * Adding SuppliedStock from usermodule
+	 */
+	@Override
+	public String addSuppliedStock(AddSupplyStockRequest requestData) {
+		restTemplate.postForObject(suppliedStockBaseUrl + "/suppliedstockms/AddSupplyStockRequest", requestData, SuppliedEntity.class);
+		return "SuppliedStock Created Successfully";
+	}
+
+	/**
+	 * Getting the suppliedStock details by Id from user module
+	 */
+	@Override
+	public SuppliedEntity findSuppliedStockDetailsById(Long suppliedStockId) {
+		
+		return restTemplate.getForObject(suppliedStockBaseUrl + "/suppliedstockms/findById/" + suppliedStockId, SuppliedEntity.class);
+	}
+
+	/**
+	 * Deleting SuppliedStock details by its Id
+	 */
+	@Override
+	public String deleteById(Long suppliedStockId) {
+		
+		restTemplate.delete(suppliedStockBaseUrl + "/suppliedstockms/ById/" + suppliedStockId);
+		return "SuppliedStock deleted for id "+suppliedStockId;
+	}
+
+	/**
+	 * Getting all the suppliedstock details from user module
+	 */
+	@Override
+	public List<SuppliedEntity> fetchAllSuppliedStock() {
+		
+		return Arrays.asList(restTemplate.getForObject(suppliedStockBaseUrl + "/suppliedstockms/findAllSuppliedStock", SuppliedEntity[].class));
+	}
+
+	public String addOrder(AddOrderRequest request) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	
+
+	
+}

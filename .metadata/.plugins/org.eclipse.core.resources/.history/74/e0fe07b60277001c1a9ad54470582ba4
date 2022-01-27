@@ -1,0 +1,32 @@
+package com.medicalstoreapp.user.service;
+
+import java.util.List;
+
+import com.medicalstoreapp.user.entity.User;
+import com.medicalstoreapp.user.request.AddSupplyStockRequest;
+import com.medicalstoreapp.user.request.CreateStockRequest;
+import com.medicalstoreapp.user.request.UpdateQuantity;
+import com.medicalstoreapp.user.vo.Stock;
+
+public interface IUserService {
+
+	public String registerUser(User user);
+
+	public void initRoleAndUser();
+
+	public String getEncodedPassword(String password);
+
+	public User getUser(String userName);
+
+	String addStock(CreateStockRequest request);
+
+	String increaseQuantity(UpdateQuantity quantity);
+
+	Stock findByStockId(Long stockId);
+
+	String deleteByStockId(Long stockId);
+
+	List<Stock> getAllStock();
+
+	String addSuppliedStock(AddSupplyStockRequest requestData);
+}

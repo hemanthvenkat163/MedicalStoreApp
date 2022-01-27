@@ -1,0 +1,7 @@
+package com.culturofest.user.service;
+
+import com.culturofest.user.entity.Role;
+
+public interface IRoleService {
+public Role createRole(Role role);
+}

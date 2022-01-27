@@ -1,0 +1,162 @@
+package com.medicalstoreapp.ordermodule.service;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.medicalstoreapp.ordermodule.dao.IOrderRepository;
+import com.medicalstoreapp.ordermodule.dto.AddOrderRequest;
+import com.medicalstoreapp.ordermodule.dto.OrderDetails;
+import com.medicalstoreapp.ordermodule.entities.CreatedOrder;
+import com.medicalstoreapp.ordermodule.exceptions.InvalidDatesException;
+import com.medicalstoreapp.ordermodule.exceptions.InvalidPeriodException;
+import com.medicalstoreapp.ordermodule.exceptions.OrderNotFoundException;
+import com.medicalstoreapp.ordermodule.util.DateConverter;
+import com.medicalstoreapp.ordermodule.util.OrderUtil;
+
+@Transactional
+@Service
+public class OrderServiceImpl implements IOrderService {
+
+	@Autowired
+	private OrderUtil orderUtil;
+	
+	@Autowired
+	private IOrderRepository orderRepo;
+	
+	@Autowired
+	private DateConverter dateConverter;
+	
+	
+	/**
+	 * Creating Order..
+	 */
+	@Override
+	public OrderDetails addOrder(AddOrderRequest request) {
+		CreatedOrder order = newOrder();
+		order.setOrderDate(newLocalDate());
+		order.setStockId(request.getStockId());
+		order.setUnits(request.getUnits());
+		Double orderPrice =(request.getUnits()*orderUtil.fetchStockPrice(request.getStockId())); //Integration with stock module is required
+		order.setOrderPrice(orderPrice);
+		order = orderRepo.save(order);
+		return orderUtil.toOrderDetails(order);
+	}
+	
+	
+	
+	public CreatedOrder newOrder() {
+		return new CreatedOrder();
+	}
+	
+	public LocalDate newLocalDate() {
+		return LocalDate.now();
+	}
+
+	
+	/**
+	 * find orderDetails by orderId
+	 * @param orderId
+	 * @return
+	 */
+	public CreatedOrder findByOrderId(Long orderId) {
+	    Optional<CreatedOrder> optional = orderRepo.findById(orderId);
+        if (!optional.isPresent()) {
+            throw new OrderNotFoundException("Order not found : " + orderId);
+         }
+	        return optional.get();
+	}
+	
+
+	 /**
+	  * 
+	  * Finding Order Details based on order id
+      */
+	 @Override
+	 public OrderDetails findOrderDetailsByOrderId(Long orderId) {
+	       CreatedOrder order = findByOrderId(orderId);
+	       OrderDetails desired = orderUtil.toOrderDetails(order);
+	       return desired;
+	    }
+
+
+	 	/**
+	 	 * Find all orders in certain period
+	 	 *
+	 	 */
+		@Override
+		public List<OrderDetails> findAllOrders(String startDate, String endDate) {
+			validatePeriod(startDate,endDate);
+			LocalDate start = dateConverter.toDate(startDate);
+			LocalDate end = dateConverter.toDate(endDate);
+			List<CreatedOrder> createdOrders = orderRepo.findInPeriod(start, end);
+			List<OrderDetails> desired = orderUtil.toOrderDetailsList(createdOrders);
+			return desired;
+		}
+	 
+		
+		/**
+		 * Finding all the orders
+		 */
+		@Override
+		public List<OrderDetails> fetchAllOrders() {
+			List<CreatedOrder> orders = orderRepo.findAll();
+			List<OrderDetails> desired = orderUtil.toOrderDetailsList(orders);
+			return desired;
+		}	 
+		
+		
+		/**
+		 * Find all orderIds in a certain period which is needed for report module
+		 */
+		@Override
+		public Set<Long> findAllOrderIds(@NotNull String startDate, @NotNull String endDate) {
+			validatePeriod(startDate,endDate);
+			LocalDate start = dateConverter.toDate(startDate);
+			LocalDate end = dateConverter.toDate(endDate);
+			List<CreatedOrder> createdOrders = orderRepo.findInPeriod(start, end);
+			List<OrderDetails> desired = orderUtil.toOrderDetailsList(createdOrders);
+			return desired.stream().map(n -> n.getOrderId()).collect(Collectors.toSet());
+		}
+		
+		
+		
+		
+		/**
+		 * validation method for startDate and endDate
+		 * @param startDateText
+		 * @param endDateText
+		 */
+	 void validatePeriod(String startDateText, String endDateText) {
+		    LocalDate startDate = dateConverter.toDate(startDateText);
+	        LocalDate endDate = dateConverter.toDate(endDateText);
+	        if (endDate.isBefore(startDate)) {
+	            throw new InvalidPeriodException("End date is less than Start Date");
+	           }
+	        if(endDate.equals(startDate))
+			{
+				throw new InvalidDatesException("Both dates should not be same ");
+			}
+		}
+
+
+
+		@Override
+		public String deleteById(@NotNull @Min(1) Long id) {
+			orderRepo.deleteById(id);
+			return "Order Deleted";
+		}
+
+
+
+	 
+}

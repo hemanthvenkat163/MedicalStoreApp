@@ -1,0 +1,11 @@
+package com.culturofest.user.service;
+
+import com.culturofest.user.entity.User;
+
+public interface IUserService {
+	
+public String registerUser(User user);
+public void initRoleAndUser();
+public String getEncodedPassword(String password);
+public User getUser(String userName);
+}

@@ -1,0 +1,13 @@
+server.port =9087
+
+
+
+
+
+server.error.whitelabel.enabled= False
+spring.datasource.url = jdbc:postgresql://localhost:5432/medicalstoreapp
+spring.datasource.username = postgres
+spring.datasource.password =root
+spring.jpa.show-sql = true 
+spring.jpa.hibernate.ddl-auto = update
+

@@ -1,0 +1,5 @@
+package com.medicalstoreapp.user.controller;
+
+public class CentralizedExceptionHandler {
+
+}
